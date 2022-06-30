@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -6,48 +7,49 @@ import {
   Redirect
 } from 'react-router-dom';
 
+import { routes } from './routes';
 import logo from '../logo.svg';
-import { LazyPage1, LazyPage2, LazyPage3 } from '../01-lazyload/pages';
+// import { LazyPage1, LazyPage2, LazyPage3 } from '../01-lazyload/pages';
+
 
 export const Navigation = () => {
   return (
-    <Router>
-      <div className="main-layout">
-        <nav>
-          <img src={logo} alt="React Logo" />
-          <ul>
-            <li>
-              <NavLink to="/lazy1" activeClassName="nav-active" exact>Lazy 1</NavLink>
-            </li>
-            <li>
-              <NavLink to="/lazy2" activeClassName="nav-active" exact>Lazy 2</NavLink>
-            </li>
-            <li>
-              <NavLink to="/lazy3" activeClassName="nav-active" exact>Lazy 3</NavLink>
-            </li>
-          </ul>
-        </nav>
+    <Suspense fallback={<p>Loading</p>}>
+      <Router>
+        <div className="main-layout">
+          <nav>
+            <img src={logo} alt="React Logo" />
+            <ul>
+              {
+                routes.map((route, i) => {
+                  return (
+                    <li key={`${i}${route.name}`}>
+                      <NavLink to={route.to} activeClassName="nav-active" exact>{route.name}</NavLink>
+                    </li>
+                  )
+                })
+              }
+            </ul>
+          </nav>
 
-        {/* A <Switch> looks through its children <Route>s and
+          {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
-        <Switch>
-          <Route path="/lazy1">
-            <LazyPage1 />
-          </Route>
-          <Route path="/lazy2">
-            <LazyPage2 />
-          </Route>
-          <Route path="/lazy3">
-            <LazyPage3 />
-          </Route>
+          <Switch>
+            {
+              routes.map((route, i) => {
+                return (
+                  <Route key={`${i}ruta${route.name}`} path={route.path} component={route.Component} />
+                )
+              })
+            }
+            <Route path="/">
+              <h1>Hello</h1>
+            </Route>
 
-          <Route path="/">
-            <h1>Hello</h1>
-          </Route>
-
-          <Redirect to="/lazy1" />
-        </Switch>
-      </div>
-    </Router>
+            <Redirect to="/lazy1" />
+          </Switch>
+        </div>
+      </Router>
+    </Suspense>
   );
 }

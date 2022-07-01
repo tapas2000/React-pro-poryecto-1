@@ -24,7 +24,7 @@ export const Navigation = () => {
                 routes.map((route, i) => {
                   return (
                     <li key={`${i}${route.name}`}>
-                      <NavLink to={route.to} activeClassName="nav-active" exact>{route.name}</NavLink>
+                      <NavLink to={route.to} activeClassName="nav-active">{route.name}</NavLink>
                     </li>
                   )
                 })
@@ -42,11 +42,8 @@ export const Navigation = () => {
                 )
               })
             }
-            <Route path="/">
-              <h1>Hello</h1>
-            </Route>
 
-            <Redirect to="/lazy1" />
+            <Redirect to={routes[0].path} />
           </Switch>
         </div>
       </Router>
